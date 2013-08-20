@@ -1,0 +1,3 @@
+*.pyc
+nnpy/constants.py
+nnpy/nanomsg.h
