@@ -1,7 +1,13 @@
 from cffi import FFI
 import os
 
-def functions(dir):
+INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
+
+def functions():
+	
+	for dir in INCLUDE:
+		if os.path.exists(dir):
+			break
 	
 	lines = []
 	for fn in os.listdir(dir):
@@ -43,7 +49,7 @@ def symbols(headers):
 
 if __name__ == '__main__':
 	
-	headers = functions('/usr/include/nanomsg')
+	headers = functions()
 	with open('nnpy/nanomsg.h', 'w') as f:
 		f.write(headers)
 	
