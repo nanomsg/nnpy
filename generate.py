@@ -47,11 +47,12 @@ def symbols(headers):
 	
 	return '\n'.join(lines) + '\n'
 
-if __name__ == '__main__':
-	
+def run():
 	headers = functions()
 	with open('nnpy/nanomsg.h', 'w') as f:
 		f.write(headers)
-	
 	with open('nnpy/constants.py', 'w') as f:
 		f.write(symbols(headers))
+
+if __name__ == '__main__':
+	run()
