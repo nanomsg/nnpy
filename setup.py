@@ -21,5 +21,6 @@ setup(
         'Programming Language :: Python',
     ],
     packages=['nnpy'],
+    package_data={'nnpy': ['*.h']},
     install_requires=['cffi'],
 )
