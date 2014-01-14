@@ -32,12 +32,12 @@ class Socket(object):
 		assert rc >= 0, rc
 	
 	def bind(self, addr):
-		buf = ffi.new('char[]', addr)
+		buf = ffi.new('char[]', addr.encode())
 		rc = nanomsg.nn_bind(self.sock, buf)
 		assert rc > 0, rc
 	
 	def connect(self, addr):
-		buf = ffi.new('char[]', addr)
+		buf = ffi.new('char[]', addr.encode())
 		rc = nanomsg.nn_connect(self.sock, buf)
 		assert rc > 0, rc
 	
