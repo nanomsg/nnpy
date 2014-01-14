@@ -3,7 +3,7 @@ nnpy: cffi-based Python bindings for nanomsg
 
 Is what it says on the tin. Stay tuned for more. Dependencies:
 
-- Python 2.7
+- Python 2.7 or 3.3
 - cffi (http://cffi.readthedocs.org/en/latest/) and its dependencies
 - nanomsg (tested with 0.2)
 
@@ -31,4 +31,4 @@ Getting started
    sub.setsockopt(nnpy.SUB, nnpy.SUB_SUBSCRIBE, '')
    
    pub.send('hello, world')
-   print sub.recv()
+   print(sub.recv())
