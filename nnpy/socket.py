@@ -23,9 +23,11 @@ class Socket(object):
 			buf = ffi.new('int*')
 			buf[0] = value
 			vlen = 4
-		elif isinstance(value, str):
+		elif isinstance(value, (str, bytes)):
 			buf = ffi.new('char[%s]' % len(value), value)
 			vlen = len(value)
+		else:
+			raise TypeError("value must be a int, str or bytes")
 		rc = nanomsg.nn_setsockopt(self.sock, level, option, buf, vlen)
 		assert rc >= 0, rc
 	

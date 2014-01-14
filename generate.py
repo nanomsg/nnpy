@@ -41,7 +41,7 @@ def symbols(headers):
 		if name == ffi.NULL:
 			break
 		
-		name = ffi.string(name)
+		name = ffi.string(name).decode()
 		name = name[3:] if name.startswith('NN_') else name
 		lines.append('%s = %s' % (name, val[0]))
 	
