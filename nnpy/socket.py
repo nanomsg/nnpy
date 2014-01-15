@@ -35,22 +35,19 @@ class Socket(object):
 		assert rc >= 0, rc
 	
 	def bind(self, addr):
-		if (isinstance(addr, str)):
-			addr = addr.encode()
+		addr = addr.encode() if (isinstance(addr, str)) else addr
 		buf = ffi.new('char[]', addr)
 		rc = nanomsg.nn_bind(self.sock, buf)
 		assert rc > 0, rc
 	
 	def connect(self, addr):
-		if (isinstance(addr, str)):
-			addr = addr.encode()
+		addr = addr.encode() if (isinstance(addr, str)) else addr
 		buf = ffi.new('char[]', addr)
 		rc = nanomsg.nn_connect(self.sock, buf)
 		assert rc > 0, rc
 	
 	def send(self, data, flags=0):
-		if (isinstance(data, str)):
-			data = data.encode()
+		data = data.encode() if (isinstance(data, str)) else data
 		l = len(data)
 		buf = ffi.new('char[%i]' % l, data)
 		rc = nanomsg.nn_send(self.sock, buf, l, flags)
