@@ -23,7 +23,10 @@ class Socket(object):
 			buf = ffi.new('int*')
 			buf[0] = value
 			vlen = 4
-		elif isinstance(value, (str, bytes)):
+		elif isinstance(value, str):
+			buf = ffi.new('char[%s]' % len(value), value.encode())
+			vlen = len(value)
+		elif isinstance(value, bytes):
 			buf = ffi.new('char[%s]' % len(value), value)
 			vlen = len(value)
 		else:
@@ -32,16 +35,22 @@ class Socket(object):
 		assert rc >= 0, rc
 	
 	def bind(self, addr):
-		buf = ffi.new('char[]', addr.encode())
+		if (isinstance(addr, str)):
+			addr = addr.encode()
+		buf = ffi.new('char[]', addr)
 		rc = nanomsg.nn_bind(self.sock, buf)
 		assert rc > 0, rc
 	
 	def connect(self, addr):
-		buf = ffi.new('char[]', addr.encode())
+		if (isinstance(addr, str)):
+			addr = addr.encode()
+		buf = ffi.new('char[]', addr)
 		rc = nanomsg.nn_connect(self.sock, buf)
 		assert rc > 0, rc
 	
 	def send(self, data, flags=0):
+		if (isinstance(data, str)):
+			data = data.encode()
 		l = len(data)
 		buf = ffi.new('char[%i]' % l, data)
 		rc = nanomsg.nn_send(self.sock, buf, l, flags)
