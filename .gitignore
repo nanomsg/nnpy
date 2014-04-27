@@ -1,3 +1,6 @@
 *.pyc
+build/
+dist/
+nnpy.egg-info/
 nnpy/constants.py
 nnpy/nanomsg.h
