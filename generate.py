@@ -15,7 +15,7 @@ def functions():
 			cont = False
 			for ln in f:
 				
-				if cont is True:
+				if cont is ',':
 					lines.append(ln)
 					cont = False
 				if cont is '{':
@@ -32,7 +32,7 @@ def functions():
 				
 				lines.append(ln)
 				if ln.strip()[-1] != ';':
-					cont = True
+					cont = ','
 				if ln.strip()[-1] == '{':
 					cont = '{'
 				if ln.strip()[-1] == '(':
