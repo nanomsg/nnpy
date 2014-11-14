@@ -2,6 +2,7 @@ from cffi import FFI
 import os
 
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
+BLOCKS = {'{': '}', '(': ')'}
 
 def functions():
 	
@@ -18,13 +19,9 @@ def functions():
 				if cont == ',':
 					lines.append(ln)
 					cont = ''
-				if cont == '{':
+				if cont in BLOCKS:
 					lines.append(ln)
-					if '}' in ln:
-						cont = ''
-				if cont == '(':
-					lines.append(ln)
-					if ')' in ln:
+					if BLOCKS[cont] in ln:
 						cont = ''
 				if not (ln.startswith('NN_EXPORT')
 					or ln.startswith('typedef')):
