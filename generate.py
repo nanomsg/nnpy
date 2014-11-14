@@ -12,20 +12,20 @@ def functions():
 	lines = []
 	for fn in os.listdir(dir):
 		with open(os.path.join(dir, fn)) as f:
-			cont = False
+			cont = ''
 			for ln in f:
 				
 				if cont is ',':
 					lines.append(ln)
-					cont = False
+					cont = ''
 				if cont is '{':
 					lines.append(ln)
 					if '}' in ln:
-						cont = False
+						cont = ''
 				if cont is '(':
 					lines.append(ln)
 					if ')' in ln:
-						cont = False
+						cont = ''
 				if not (ln.startswith('NN_EXPORT')
 					or ln.startswith('typedef')):
 					continue
