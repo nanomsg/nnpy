@@ -15,14 +15,14 @@ def functions():
 			cont = ''
 			for ln in f:
 				
-				if cont is ',':
+				if cont == ',':
 					lines.append(ln)
 					cont = ''
-				if cont is '{':
+				if cont == '{':
 					lines.append(ln)
 					if '}' in ln:
 						cont = ''
-				if cont is '(':
+				if cont == '(':
 					lines.append(ln)
 					if ')' in ln:
 						cont = ''
