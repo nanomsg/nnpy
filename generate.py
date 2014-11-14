@@ -15,15 +15,28 @@ def functions():
 			cont = False
 			for ln in f:
 				
-				if cont:
+				if cont is True:
 					lines.append(ln)
 					cont = False
-				if not ln.startswith('NN_EXPORT'):
+				if cont is '{':
+					lines.append(ln)
+					if '}' in ln:
+						cont = False
+				if cont is '(':
+					lines.append(ln)
+					if ')' in ln:
+						cont = False
+				if not (ln.startswith('NN_EXPORT')
+					or ln.startswith('typedef')):
 					continue
 				
 				lines.append(ln)
 				if ln.strip()[-1] != ';':
 					cont = True
+				if ln.strip()[-1] == '{':
+					cont = '{'
+				if ln.strip()[-1] == '(':
+					cont = '('
 	
 	return ''.join(ln[10:] if ln.startswith('NN_') else ln for ln in lines)
 
