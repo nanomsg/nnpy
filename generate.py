@@ -31,12 +31,7 @@ def functions():
 					continue
 				
 				lines.append(ln)
-				if ln.strip()[-1] != ';':
-					cont = ','
-				if ln.strip()[-1] == '{':
-					cont = '{'
-				if ln.strip()[-1] == '(':
-					cont = '('
+				cont = ln.strip()[-1]
 	
 	return ''.join(ln[10:] if ln.startswith('NN_') else ln for ln in lines)
 
