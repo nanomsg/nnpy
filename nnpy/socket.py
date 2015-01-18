@@ -55,6 +55,6 @@ class Socket(object):
 	
 	def recv(self, flags=0):
 		buf = ffi.new('char**')
-		rc = nanomsg.nn_recv(self.sock, buf, sys.maxsize * 2 - 1, flags)
+		rc = nanomsg.nn_recv(self.sock, buf, NN_MSG, flags)
 		assert rc > 0, rc
 		return ffi.buffer(buf, rc)[:]
