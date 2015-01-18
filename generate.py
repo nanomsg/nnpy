@@ -57,8 +57,6 @@ def run():
 	with open('nnpy/nanomsg.h', 'w') as f:
 		f.write(headers)
 	with open('nnpy/constants.py', 'w') as f:
-		f.write('import sys\n')
-		f.write('NN_MSG = sys.maxsize * 2 + 1\n\n')
 		f.write(symbols(headers))
 
 if __name__ == '__main__':
