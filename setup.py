@@ -6,7 +6,7 @@ generate.run()
 setup(
     name='nnpy',
     version='0.1',
-    url='https://github.com/djc/jasinja',
+    url='https://github.com/nanomsg/nnpy',
     license='MIT',
     author='Dirkjan Ochtman',
     author_email='dirkjan@ochtman.nl',
