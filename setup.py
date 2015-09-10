@@ -1,3 +1,5 @@
+"""NNPY installation script"""
+
 from setuptools import setup
 import generate
 
