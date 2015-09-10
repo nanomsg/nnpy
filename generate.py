@@ -1,4 +1,12 @@
-from cffi import FFI
+from __future__ import print_function
+import sys
+
+try:
+    from cffi import FFI
+except ImportError:
+    print("cffi package is needed")
+    sys.exit(1)
+
 import os
 
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
