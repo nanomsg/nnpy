@@ -1,7 +1,4 @@
 from setuptools import setup
-import generate
-
-generate.run()
 
 setup(
     name='nnpy',
@@ -26,6 +23,7 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     packages=['nnpy'],
-    package_data={'nnpy': ['*.h']},
+    setup_requires=["cffi>=1.0.0"],
+    cffi_modules=["generate.py:ffi"],
     install_requires=['cffi'],
 )
