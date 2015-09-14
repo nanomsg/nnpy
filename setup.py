@@ -1,7 +1,6 @@
-from setuptools import setup
-import generate
+"""NNPY installation script"""
 
-generate.run()
+from setuptools import setup
 
 setup(
     name='nnpy',
@@ -19,8 +18,15 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: Implementation :: CPython',
     ],
     packages=['nnpy'],
     package_data={'nnpy': ['*.h']},
+    setup_requires=["cffi>=1.0.0"],
+    cffi_modules=["generate.py:ffi"],
     install_requires=['cffi'],
 )
