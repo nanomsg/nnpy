@@ -32,12 +32,9 @@ def functions():
     
     return ''.join(ln[10:] if ln.startswith('NN_') else ln for ln in lines)
 
-def symbols(headers):
+def symbols(ffi):
     
-    ffi = FFI()
-    ffi.cdef(headers)
     nanomsg = ffi.dlopen('nanomsg')
-    
     lines = []
     for i in range(1024):
         
@@ -53,11 +50,13 @@ def symbols(headers):
     return '\n'.join(lines) + '\n'
 
 def run():
+    ffi = FFI()
     headers = functions()
+    ffi.cdef(headers)
     with open('nnpy/nanomsg.h', 'w') as f:
         f.write(headers)
     with open('nnpy/constants.py', 'w') as f:
-        f.write(symbols(headers))
+        f.write(symbols(ffi))
 
 if __name__ == '__main__':
     run()
