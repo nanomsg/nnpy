@@ -51,17 +51,22 @@ def symbols(ffi):
     
     return '\n'.join(lines) + '\n'
 
-def run():
+def create_module():
 
     hfiles = header_files()
-    headers = functions(hfiles)
-    ffi = FFI()
-    ffi.cdef(headers)
+    del hfiles['ws.h'] # due to https://github.com/nanomsg/nanomsg/issues/467
 
-    with open('nnpy/nanomsg.h', 'w') as f:
-        f.write(headers)
+    ffi = FFI()
+    ffi.cdef(functions(hfiles))
+    ffi.set_source('_nnpy', '\n'.join('#include <%s>' % fn for fn in hfiles),
+                   libraries=['nanomsg'], include_dirs=INCLUDE)
+    return ffi
+
+def run():
+    ffi = create_module()
     with open('nnpy/constants.py', 'w') as f:
         f.write(symbols(ffi))
+    ffi.compile()
 
 if __name__ == '__main__':
     run()
