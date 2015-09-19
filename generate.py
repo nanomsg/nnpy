@@ -4,15 +4,17 @@ import os
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
 BLOCKS = {'{': '}', '(': ')'}
 
-def functions():
-    
+def header_files():
     for dir in INCLUDE:
         if os.path.exists(dir):
             break
+    return {fn: os.path.join(dir, fn) for fn in os.listdir(dir)}
+
+def functions():
     
     lines = []
-    for fn in os.listdir(dir):
-        with open(os.path.join(dir, fn)) as f:
+    for fn, path in header_files().iteritems():
+        with open(path) as f:
             cont = ''
             for ln in f:
                 
