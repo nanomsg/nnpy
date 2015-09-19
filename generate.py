@@ -10,10 +10,10 @@ def header_files():
             break
     return {fn: os.path.join(dir, fn) for fn in os.listdir(dir)}
 
-def functions():
+def functions(hfiles):
     
     lines = []
-    for fn, path in header_files().iteritems():
+    for fn, path in hfiles.iteritems():
         with open(path) as f:
             cont = ''
             for ln in f:
@@ -52,9 +52,12 @@ def symbols(ffi):
     return '\n'.join(lines) + '\n'
 
 def run():
+
+    hfiles = header_files()
+    headers = functions(hfiles)
     ffi = FFI()
-    headers = functions()
     ffi.cdef(headers)
+
     with open('nnpy/nanomsg.h', 'w') as f:
         f.write(headers)
     with open('nnpy/constants.py', 'w') as f:
