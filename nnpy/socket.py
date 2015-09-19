@@ -1,6 +1,4 @@
 from . import nanomsg, ffi
-from .constants import *
-import sys
 
 NN_MSG = int(ffi.cast("size_t", -1))
 
