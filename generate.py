@@ -62,11 +62,9 @@ def create_module():
                    libraries=['nanomsg'], include_dirs=INCLUDE)
     return ffi
 
-def run():
-    ffi = create_module()
-    with open('nnpy/constants.py', 'w') as f:
-        f.write(symbols(ffi))
-    ffi.compile()
+ffi = create_module()
+with open('nnpy/constants.py', 'w') as f:
+    f.write(symbols(ffi))
 
 if __name__ == '__main__':
-    run()
+    ffi.compile()
