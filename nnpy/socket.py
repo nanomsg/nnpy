@@ -17,7 +17,7 @@ class Socket(object):
         rc = nanomsg.nn_getsockopt(self.sock, level, option, buf, size)
         assert rc >= 0, rc
         return buf[0]
-
+    
     def setsockopt(self, level, option, value):
         if isinstance(value, int):
             buf = ffi.new('int*')
