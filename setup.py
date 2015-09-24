@@ -1,10 +1,8 @@
-"""NNPY installation script"""
-
 from setuptools import setup
 
 setup(
     name='nnpy',
-    version='0.1',
+    version='0.9.1',
     url='https://github.com/nanomsg/nnpy',
     license='MIT',
     author='Dirkjan Ochtman',
@@ -25,7 +23,6 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     packages=['nnpy'],
-    package_data={'nnpy': ['*.h']},
     setup_requires=["cffi>=1.0.0"],
     cffi_modules=["generate.py:ffi"],
     install_requires=['cffi'],

@@ -14,71 +14,67 @@ import os
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
 BLOCKS = {'{': '}', '(': ')'}
 
-def functions():
-    """Get function prototypes from include files"""
-    for incdir in INCLUDE:
-        if os.path.exists(incdir):
+def header_files():
+    for dir in INCLUDE:
+        if os.path.exists(dir):
             break
+    return {fn: os.path.join(dir, fn) for fn in os.listdir(dir)}
 
+def functions(hfiles):
+    
     lines = []
-    for incfile in os.listdir(incdir):
-        with open(os.path.join(incdir, incfile)) as hincfile:
+    for fn, path in hfiles.iteritems():
+        with open(path) as f:
             cont = ''
-            for fileline in hincfile:
+            for ln in f:
+                
                 if cont == ',':
-                    lines.append(fileline)
+                    lines.append(ln)
                     cont = ''
                 if cont in BLOCKS:
-                    lines.append(fileline)
-                    if BLOCKS[cont] in fileline:
+                    lines.append(ln)
+                    if BLOCKS[cont] in ln:
                         cont = ''
-                if not (fileline.startswith('NN_EXPORT')
-                        or fileline.startswith('typedef')):
+                if not (ln.startswith('NN_EXPORT')
+                    or ln.startswith('typedef')):
                     continue
+                
+                lines.append(ln)
+                cont = ln.strip()[-1]
+    
+    return ''.join(ln[10:] if ln.startswith('NN_') else ln for ln in lines)
 
-                lines.append(fileline)
-                cont = fileline.strip()[-1]
-
-    return ''.join(fileline[10:] if fileline.startswith('NN_') else fileline for fileline in lines)
-
-def symbols():
-    """Get defines from library"""
+def symbols(ffi):
+    
     nanomsg = ffi.dlopen('nanomsg')
-
     lines = []
     for i in range(1024):
+        
         val = ffi.new('int*')
         name = nanomsg.nn_symbol(i, val)
         if name == ffi.NULL:
             break
-
+        
         name = ffi.string(name).decode()
         name = name[3:] if name.startswith('NN_') else name
         lines.append('%s = %s' % (name, val[0]))
-
+    
     return '\n'.join(lines) + '\n'
 
-# pylint: disable=invalid-name
-ffi = FFI()
+def create_module():
 
-ffi.set_source("_nnpy",
-               """#include <nn.h>
-#include <bus.h>
-#include <inproc.h>
-#include <ipc.h>
-#include <pair.h>
-#include <pipeline.h>
-#include <pubsub.h>
-#include <reqrep.h>
-#include <survey.h>
-#include <tcp.h>""",
-               libraries=['nanomsg'],
-               include_dirs=['/usr/include/nanomsg', '/usr/local/include/nanomsg'])
+    hfiles = header_files()
+    del hfiles['ws.h'] # due to https://github.com/nanomsg/nanomsg/issues/467
 
-ffi.cdef(functions())
+    ffi = FFI()
+    ffi.cdef(functions(hfiles))
+    ffi.set_source('_nnpy', '\n'.join('#include <%s>' % fn for fn in hfiles),
+                   libraries=['nanomsg'], include_dirs=INCLUDE)
+    return ffi
 
-with open('nnpy/constants.py', 'w') as handle:
-    handle.write(symbols())
+ffi = create_module()
+with open('nnpy/constants.py', 'w') as f:
+    f.write(symbols(ffi))
 
 if __name__ == '__main__':
     ffi.compile()

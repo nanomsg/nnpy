@@ -14,7 +14,7 @@ The usual should work:
 
 .. code-block:: shell
 
-   $ sudo python setup.py install
+   $ sudo pip install .
 
 Getting started
 ---------------
