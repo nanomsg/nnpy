@@ -23,7 +23,7 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     packages=['nnpy'],
-    setup_requires=["cffi>=1.0.0"],
+    setup_requires=["cffi>=1.0.0", "six"],
     cffi_modules=["generate.py:ffi"],
     install_requires=['cffi'],
 )

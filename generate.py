@@ -1,5 +1,6 @@
 from cffi import FFI
 import os
+import six
 
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
 BLOCKS = {'{': '}', '(': ')'}
@@ -13,7 +14,7 @@ def header_files():
 def functions(hfiles):
     
     lines = []
-    for fn, path in hfiles.iteritems():
+    for fn, path in six.iteritems(hfiles):
         with open(path) as f:
             cont = ''
             for ln in f:
