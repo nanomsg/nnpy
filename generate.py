@@ -13,7 +13,7 @@ def header_files():
 def functions(hfiles):
     
     lines = []
-    for fn, path in hfiles.iteritems():
+    for fn, path in hfiles.items():
         with open(path) as f:
             cont = ''
             for ln in f:
