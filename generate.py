@@ -54,7 +54,8 @@ def symbols(ffi):
 def create_module():
 
     hfiles = header_files()
-    del hfiles['ws.h'] # due to https://github.com/nanomsg/nanomsg/issues/467
+    # remove ws.h due to https://github.com/nanomsg/nanomsg/issues/467
+    hfiles.pop('ws.h', None)
 
     ffi = FFI()
     ffi.cdef(functions(hfiles))
