@@ -47,10 +47,12 @@ class Socket(object):
         assert rc > 0, rc
     
     def send(self, data, flags=0):
-        data = data.encode() if isinstance(data, str) else data
-        l = len(data)
-        buf = ffi.new('char[%i]' % l, data)
-        rc = nanomsg.nn_send(self.sock, buf, l, flags)
+        if isinstance(data, memoryview):
+            buf = ffi.from_buffer(data)
+        else:
+            data = data.encode() if isinstance(data, str) else data
+            buf = ffi.new('char[%i]' % len(data), data)
+        rc = nanomsg.nn_send(self.sock, buf, len(data), flags)
         assert rc > 0, rc
     
     def recv(self, flags=0):
