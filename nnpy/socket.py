@@ -1,6 +1,9 @@
 from . import nanomsg, ffi
+import sys
 
 NN_MSG = int(ffi.cast("size_t", -1))
+
+ustr = str if sys.version_info[0] > 2 else unicode
 
 class Socket(object):
     
@@ -23,7 +26,7 @@ class Socket(object):
             buf = ffi.new('int*')
             buf[0] = value
             vlen = 4
-        elif isinstance(value, str):
+        elif isinstance(value, ustr):
             buf = ffi.new('char[%s]' % len(value), value.encode())
             vlen = len(value)
         elif isinstance(value, bytes):
@@ -35,13 +38,13 @@ class Socket(object):
         assert rc >= 0, rc
     
     def bind(self, addr):
-        addr = addr.encode() if isinstance(addr, str) else addr
+        addr = addr.encode() if isinstance(addr, ustr) else addr
         buf = ffi.new('char[]', addr)
         rc = nanomsg.nn_bind(self.sock, buf)
         assert rc > 0, rc
     
     def connect(self, addr):
-        addr = addr.encode() if isinstance(addr, str) else addr
+        addr = addr.encode() if isinstance(addr, ustr) else addr
         buf = ffi.new('char[]', addr)
         rc = nanomsg.nn_connect(self.sock, buf)
         assert rc > 0, rc
@@ -50,7 +53,7 @@ class Socket(object):
         if isinstance(data, memoryview):
             buf = ffi.from_buffer(data)
         else:
-            data = data.encode() if isinstance(data, str) else data
+            data = data.encode() if isinstance(data, ustr) else data
             buf = ffi.new('char[%i]' % len(data), data)
         rc = nanomsg.nn_send(self.sock, buf, len(data), flags)
         assert rc > 0, rc
