@@ -3,7 +3,9 @@ import os
 
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
 if 'CPATH' in os.environ:
-    INCLUDE += [os.path.join(p, 'nanomsg') for p in os.getenv('CPATH').split(os.pathsep)]
+    cpaths = os.getenv('CPATH').split(os.pathsep)
+    INCLUDE += [os.path.join(p, 'nanomsg') for p in cpaths]
+
 BLOCKS = {'{': '}', '(': ')'}
 
 def header_files():
