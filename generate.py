@@ -2,6 +2,8 @@ from cffi import FFI
 import os
 
 INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
+if 'CPATH' in os.environ:
+    INCLUDE += [os.path.join(p, 'nanomsg') for p in os.getenv('CPATH').split(os.pathsep)]
 BLOCKS = {'{': '}', '(': ')'}
 
 def header_files():
