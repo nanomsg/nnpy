@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='nnpy',
-    version='1.0',
+    version='1.1',
     url='https://github.com/nanomsg/nnpy',
     license='MIT',
     author='Dirkjan Ochtman',
