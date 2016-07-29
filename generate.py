@@ -1,15 +1,21 @@
 from cffi import FFI
 import os
 
-INCLUDE = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
-if 'CPATH' in os.environ:
-    cpaths = os.getenv('CPATH').split(os.pathsep)
-    INCLUDE += [os.path.join(p, 'nanomsg') for p in cpaths]
+try:
+    import ConfigParser as cfgparser
+except ImportError:
+    # try py3 import
+    import configparser as cfg
+
+SITE_CFG = 'site.cfg'
+
+DEFAULT_INCLUDE_DIRS = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
+DEFAULT_HOST_LIBRARY = 'nanomsg'
 
 BLOCKS = {'{': '}', '(': ')'}
 
-def header_files():
-    for dir in INCLUDE:
+def header_files(include_paths):
+    for dir in include_paths:
         if os.path.exists(dir):
             break
     return {fn: os.path.join(dir, fn) for fn in os.listdir(dir)}
@@ -38,9 +44,9 @@ def functions(hfiles):
 
     return ''.join(ln[10:] if ln.startswith('NN_') else ln for ln in lines)
 
-def symbols(ffi):
+def symbols(ffi, host_library):
 
-    nanomsg = ffi.dlopen('nanomsg')
+    nanomsg = ffi.dlopen(host_library)
     lines = []
     for i in range(1024):
 
@@ -56,20 +62,46 @@ def symbols(ffi):
     return '\n'.join(lines) + '\n'
 
 def create_module():
+    set_source_args = {
+        'include_dirs': DEFAULT_INCLUDE_DIRS
+    }
 
-    hfiles = header_files()
+    host_library = DEFAULT_HOST_LIBRARY
+
+    if os.path.isfile(SITE_CFG):
+        parser = cfgparser.ConfigParser()
+
+        if parser.read(SITE_CFG):
+            parsed_cfg = parser.defaults()
+
+            for param in ['include_dirs', 'library_dirs']:
+                if param in parsed_cfg:
+                    set_source_args[param] = parsed_cfg[param].split(',')
+
+            if 'host_library' in parsed_cfg:
+                host_library = parsed_cfg['host_library']
+
+
+    if 'CPATH' in os.environ:
+        cpaths = os.getenv('CPATH').split(os.pathsep)
+        site_cfg['include_dirs'] += [os.path.join(p, 'nanomsg')
+                                     for p in cpaths]
+
+    hfiles = header_files(set_source_args['include_dirs'])
     # remove ws.h due to https://github.com/nanomsg/nanomsg/issues/467
     hfiles.pop('ws.h', None)
 
     ffi = FFI()
     ffi.cdef(functions(hfiles))
     ffi.set_source('_nnpy', '\n'.join('#include <%s>' % fn for fn in hfiles),
-                   libraries=['nanomsg'], include_dirs=INCLUDE)
+                   libraries=['nanomsg'], **set_source_args)
+
+    with open('nnpy/constants.py', 'w') as f:
+        f.write(symbols(ffi, host_library))
+
     return ffi
 
 ffi = create_module()
-with open('nnpy/constants.py', 'w') as f:
-    f.write(symbols(ffi))
 
 if __name__ == '__main__':
     ffi.compile()
