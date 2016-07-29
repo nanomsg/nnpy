@@ -62,18 +62,22 @@ def symbols(ffi, host_library):
     return '\n'.join(lines) + '\n'
 
 def create_module():
+
+    # Set defaults
+
     set_source_args = {
         'include_dirs': DEFAULT_INCLUDE_DIRS
     }
-
     host_library = DEFAULT_HOST_LIBRARY
+
+    # Read overrides for cross-compilation support from site.cfg
 
     if os.path.isfile(SITE_CFG):
         parser = cfgparser.ConfigParser()
 
         if parser.read(SITE_CFG):
-            parsed_cfg = parser.defaults()
 
+            parsed_cfg = parser.defaults()
             for param in ['include_dirs', 'library_dirs']:
                 if param in parsed_cfg:
                     set_source_args[param] = parsed_cfg[param].split(',')
@@ -81,6 +85,7 @@ def create_module():
             if 'host_library' in parsed_cfg:
                 host_library = parsed_cfg['host_library']
 
+    # Add some more directories from the environment
 
     if 'CPATH' in os.environ:
         cpaths = os.getenv('CPATH').split(os.pathsep)
@@ -90,6 +95,8 @@ def create_module():
     hfiles = header_files(set_source_args['include_dirs'])
     # remove ws.h due to https://github.com/nanomsg/nanomsg/issues/467
     hfiles.pop('ws.h', None)
+
+    # Build FFI module and write out the constants
 
     ffi = FFI()
     ffi.cdef(functions(hfiles))
