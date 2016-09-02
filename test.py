@@ -11,3 +11,4 @@ sub.setsockopt(nnpy.SUB, nnpy.SUB_SUBSCRIBE, '')
 
 pub.send('FLUB')
 print(sub.recv())
+print(pub.get_statistic(nnpy.STAT_MESSAGES_SENT))

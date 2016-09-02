@@ -75,3 +75,7 @@ class Socket(object):
         s = ffi.buffer(buf[0], rc)[:]
         nanomsg.nn_freemsg(buf[0])
         return s
+
+    def get_statistic(self, statistic):
+        rc = nanomsg.nn_get_statistic(self.sock, statistic)
+        return self._error(rc, rc)
