@@ -22,8 +22,13 @@ class Socket(object):
         return value
     
     def close(self):
-        nanomsg.nn_close(self.sock)
+        rc = nanomsg.nn_close(self.sock)
+        return self._error(rc, rc)
     
+    def shutdown(self, who):
+        rc = nanomsg.nn_shutdown(self.sock, who)
+        return self._error(rc, rc)
+        
     def getsockopt(self, level, option):
         buf = ffi.new('int*')
         size = ffi.new('size_t*')
@@ -75,7 +80,7 @@ class Socket(object):
         s = ffi.buffer(buf[0], rc)[:]
         nanomsg.nn_freemsg(buf[0])
         return s
-
+        
     def get_statistic(self, statistic):
         rc = nanomsg.nn_get_statistic(self.sock, statistic)
         return self._error(rc, rc)
