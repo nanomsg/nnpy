@@ -6,7 +6,7 @@ class NNError(Exception):
 def convert(rc, value=None):
     if rc < 0:
         chars = nanomsg.nn_strerror(nanomsg.nn_errno())
-        raise NNError(ffi.string(chars))
+        raise NNError(ffi.string(chars).decode())
     if callable(value):
         return value()
     return value
