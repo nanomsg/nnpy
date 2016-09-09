@@ -14,6 +14,14 @@ DEFAULT_HOST_LIBRARY = 'nanomsg'
 
 BLOCKS = {'{': '}', '(': ')'}
 
+NN_POLLFD = """
+struct nn_pollfd {
+    int fd;
+    short events;
+    short revents;
+};
+"""
+
 def header_files(include_paths):
     for dir in include_paths:
         if os.path.exists(dir):
@@ -99,6 +107,7 @@ def create_module():
     # Build FFI module and write out the constants
 
     ffi = FFI()
+    ffi.cdef(NN_POLLFD)
     ffi.cdef(functions(hfiles))
     ffi.set_source('_nnpy', '\n'.join('#include <%s>' % fn for fn in hfiles),
                    libraries=['nanomsg'], **set_source_args)
