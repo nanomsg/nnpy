@@ -80,6 +80,11 @@ class Socket(object):
         s = ffi.buffer(buf[0], rc)[:]
         nanomsg.nn_freemsg(buf[0])
         return s
+
+    def poll(self, events, timeout=0):
+        poll_fd = ffi.new('struct nn_pollfd[]', [(self.sock, events, 0)])
+        rc = nanomsg.nn_poll(poll_fd, 1, timeout)
+        return self._error(rc, lambda: poll_fd[0].revents)
         
     def get_statistic(self, statistic):
         rc = nanomsg.nn_get_statistic(self.sock, statistic)
