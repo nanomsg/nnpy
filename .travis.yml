@@ -1,0 +1,20 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+before_install:
+  - wget https://github.com/nanomsg/nanomsg/archive/1.0.0.tar.gz
+  - tar xzf 1.0.0.tar.gz
+  - cd nanomsg-1.0.0 && mkdir build && cd build
+  - cmake .. && make && sudo make install
+  - cd ../..
+install:
+  - pip install cffi
+  - pip install coveralls
+script:
+  - python generate.py
+  - coverage run -m nnpy.tests
+after_success:
+  coveralls
