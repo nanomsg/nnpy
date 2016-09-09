@@ -14,4 +14,4 @@ class PollSet(object):
 
     def poll(self, timeout=0):
         rc = nanomsg.nn_poll(self.fd_set, len(self.data), timeout)
-        return errors.convert(rc, lambda: [fd.revents for rd in self.fd_set]
+        return errors.convert(rc, lambda: [fd.revents for rd in self.fd_set])
