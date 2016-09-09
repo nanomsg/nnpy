@@ -10,5 +10,7 @@ sub.connect('inproc://foo')
 sub.setsockopt(nnpy.SUB, nnpy.SUB_SUBSCRIBE, '')
 
 pub.send('FLUB')
+poller = nnpy.PollSet((sub, nnpy.POLLIN))
+print(poller.poll())
 print(sub.recv())
 print(pub.get_statistic(nnpy.STAT_MESSAGES_SENT))

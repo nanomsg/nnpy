@@ -13,6 +13,13 @@ DEFAULT_INCLUDE_DIRS = ['/usr/include/nanomsg', '/usr/local/include/nanomsg']
 DEFAULT_HOST_LIBRARY = 'nanomsg'
 
 BLOCKS = {'{': '}', '(': ')'}
+DEFINITIONS = '''
+struct nn_pollfd {
+    int fd;
+    short events;
+    short revents;
+};
+'''
 
 def header_files(include_paths):
     for dir in include_paths:
@@ -99,6 +106,7 @@ def create_module():
     # Build FFI module and write out the constants
 
     ffi = FFI()
+    ffi.cdef(DEFINITIONS)
     ffi.cdef(functions(hfiles))
     ffi.set_source('_nnpy', '\n'.join('#include <%s>' % fn for fn in hfiles),
                    libraries=['nanomsg'], **set_source_args)
