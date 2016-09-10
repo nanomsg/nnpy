@@ -1,12 +1,16 @@
 from _nnpy import ffi, lib as nanomsg
 
 class NNError(Exception):
-    pass
+    def __init__(self, error_no, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_no = error_no
 
 def convert(rc, value=None):
     if rc < 0:
-        chars = nanomsg.nn_strerror(nanomsg.nn_errno())
-        raise NNError(ffi.string(chars))
+        error_no = nanomsg.nn_errno()
+        chars = nanomsg.nn_strerror(error_no)
+        msg = ffi.string(chars).decode()
+        raise NNError(rc, error_no, msg)
     if callable(value):
         return value()
     return value
