@@ -10,7 +10,7 @@ def convert(rc, value=None):
         error_no = nanomsg.nn_errno()
         chars = nanomsg.nn_strerror(error_no)
         msg = ffi.string(chars).decode()
-        raise NNError(rc, error_no, msg)
+        raise NNError(error_no, msg)
     if callable(value):
         return value()
     return value
