@@ -32,3 +32,9 @@ Getting started
    
    pub.send('hello, world')
    print(sub.recv())
+
+Related Projects
+----------------
+
+- `nanomsg <http://nanomsg.org/>`_
+- `aionn <https://github.com/wrobell/aionn>`_ - asyncio messaging library based on nnpy
