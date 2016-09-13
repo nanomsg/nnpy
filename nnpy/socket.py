@@ -6,8 +6,21 @@ NN_MSG = int(ffi.cast("size_t", -1))
 ustr = str if sys.version_info[0] > 2 else unicode
 
 class Socket(object):
-    
+    """
+    Nanomsg scalability protocols (SP) socket.
+
+    .. seealso:: `nanomsg <http://nanomsg.org/v1.0.0/nanomsg.7.html>`_
+    """
     def __init__(self, domain, protocol):
+        """
+        Create SP socket.
+
+        :param domain: Socket domain `AF_SP` or `AF_SP_RAW`.
+        :param protocol: Type of the socket determining its exact
+            semantics.
+
+        .. seealso:: `nn_socket <http://nanomsg.org/v1.0.0/nn_socket.3.html>`_
+        """
         self.sock = nanomsg.nn_socket(domain, protocol)
     
     def close(self):
