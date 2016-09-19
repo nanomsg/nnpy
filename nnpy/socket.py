@@ -67,9 +67,13 @@ class Socket(object):
         return errors.convert(rc, rc)
     
     def send(self, data, flags=0):
-        if isinstance(data, memoryview):
+        # Some data types can use a zero-copy buffer creation strategy when
+        # paired with new versions of CFFI.  Namely, CFFI 1.8 supports `bytes`
+        # types with `from_buffer`, which is about 18% faster.  We try the fast
+        # way first and degrade as needed for the platform.
+        try:
             buf = ffi.from_buffer(data)
-        else:
+        except TypeError:
             data = data.encode() if isinstance(data, ustr) else data
             buf = ffi.new('char[%i]' % len(data), data)
         rc = nanomsg.nn_send(self.sock, buf, len(data), flags)
