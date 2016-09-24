@@ -4,3 +4,5 @@ build/
 dist/
 nnpy.egg-info/
 nnpy/constants.py
+.coverage
+
