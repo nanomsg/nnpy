@@ -15,11 +15,23 @@ class Tests(unittest.TestCase):
 
         pub.send('FLUB')
         poller = nnpy.PollSet((sub, nnpy.POLLIN))
-        self.assertEqual(poller.poll(), 1)
+        self.assertEqual(len(poller.poll()), 1)
+        self.assertEqual(poller.poll()[0], 1)
         self.assertEqual(sub.recv(), 'FLUB')
         self.assertEqual(pub.get_statistic(nnpy.STAT_MESSAGES_SENT), 1)
         pub.close()
         sub.shutdown(sub_conn)
+
+    def test_basic_nn_error(self):
+        address = 'inproc://timeout-always'
+
+        req = nnpy.Socket(nnpy.AF_SP, nnpy.REQ)
+        req.connect(address)
+
+        req.setsockopt(nnpy.SOL_SOCKET, nnpy.RCVTIMEO, 500)
+
+        with self.assertRaises(nnpy.errors.NNError):
+            req.recv()
 
 def suite():
     return unittest.makeSuite(Tests)
