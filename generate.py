@@ -1,5 +1,6 @@
 from cffi import FFI
 import os
+import fnmatch
 
 try:
     import ConfigParser as cfgparser
@@ -25,7 +26,7 @@ def header_files(include_paths):
     for dir in include_paths:
         if os.path.exists(dir):
             break
-    return {fn: os.path.join(dir, fn) for fn in os.listdir(dir)}
+    return {fn: os.path.join(dir, fn) for fn in os.listdir(dir) if fnmatch.fnmatch(fn, '*.h')}
 
 def functions(hfiles):
 
@@ -96,8 +97,8 @@ def create_module():
 
     if 'CPATH' in os.environ:
         cpaths = os.getenv('CPATH').split(os.pathsep)
-        site_cfg['include_dirs'] += [os.path.join(p, 'nanomsg')
-                                     for p in cpaths]
+        set_source_args['include_dirs'] += [os.path.join(p, 'nanomsg')
+                                            for p in cpaths]
 
     hfiles = header_files(set_source_args['include_dirs'])
     # remove ws.h due to https://github.com/nanomsg/nanomsg/issues/467
