@@ -1,6 +1,5 @@
 from cffi import FFI
 import os
-import fnmatch
 
 try:
     import ConfigParser as cfgparser
@@ -26,7 +25,8 @@ def header_files(include_paths):
     for dir in include_paths:
         if os.path.exists(dir):
             break
-    return {fn: os.path.join(dir, fn) for fn in os.listdir(dir) if fnmatch.fnmatch(fn, '*.h')}
+    return {fn: os.path.join(dir, fn) for fn in os.listdir(dir)
+            if fn.endswith('.h')}
 
 def functions(hfiles):
 
