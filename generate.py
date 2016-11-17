@@ -5,7 +5,7 @@ try:
     import ConfigParser as cfgparser
 except ImportError:
     # try py3 import
-    import configparser as cfg
+    import configparser as cfgparser
 
 SITE_CFG = 'site.cfg'
 
