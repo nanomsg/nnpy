@@ -18,6 +18,25 @@ struct nn_pollfd {
     int fd;
     short events;
     short revents;
+    ...;
+};
+struct nn_cmsghdr {
+    size_t cmsg_len;
+    int cmsg_level;
+    int cmsg_type;
+    ...;
+};
+struct nn_iovec {
+    void * iov_base;
+    size_t iov_len;
+    ...;
+};
+struct nn_msghdr {
+    struct nn_iovec *msg_iov;
+    int msg_iovlen;
+    void * msg_control;
+    size_t msg_controllen;
+    ...;
 };
 '''
 
@@ -50,6 +69,13 @@ def functions(hfiles):
                 lines.append(ln)
                 cont = ln.strip()[-1]
 
+    lines.extend([
+        'struct nn_cmsghdr *NN_CMSG_FIRSTHDR(struct nn_msghdr *hdr);',
+        'struct nn_cmsghdr *NN_CMSG_NXTHDR(struct nn_msghdr * hdr, struct nn_cmsghdr *cmsg);',
+        'unsigned char * NN_CMSG_DATA(struct nn_cmsghdr * cmsg);',
+        'size_t NN_CMSG_SPACE(size_t len);',
+        'size_t NN_CMSG_LEN(size_t len);'
+    ])
     return ''.join(ln[10:] if ln.startswith('NN_') else ln for ln in lines)
 
 def symbols(ffi, host_library):
