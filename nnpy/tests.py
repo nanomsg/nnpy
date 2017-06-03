@@ -17,7 +17,7 @@ class Tests(unittest.TestCase):
         poller = nnpy.PollSet((sub, nnpy.POLLIN))
         self.assertEqual(len(poller.poll()), 1)
         self.assertEqual(poller.poll()[0], 1)
-        self.assertEqual(sub.recv(), 'FLUB')
+        self.assertEqual(sub.recv().decode(), 'FLUB')
         self.assertEqual(pub.get_statistic(nnpy.STAT_MESSAGES_SENT), 1)
         pub.close()
         sub.shutdown(sub_conn)
