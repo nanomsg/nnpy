@@ -14,7 +14,7 @@ The usual should work:
 
 .. code-block:: shell
 
-   $ sudo pip install .
+   $ sudo pip install nnpy
 
 Getting started
 ---------------
