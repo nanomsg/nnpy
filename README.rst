@@ -1,6 +1,8 @@
 nnpy: cffi-based Python bindings for nanomsg
 ============================================
 
+**This library is no longer being maintained.** Instead, consider using [pynng](https://github.com/codypiersall/pynng).
+
 Is what it says on the tin. Stay tuned for more. Dependencies:
 
 - Python 2.7 or 3.4
