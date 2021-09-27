@@ -1,7 +1,10 @@
 nnpy: cffi-based Python bindings for nanomsg
 ============================================
 
-**This library is no longer being maintained.** Instead, consider using [pynng](https://github.com/codypiersall/pynng).
+This library is no longer being maintained.
+-------------------------------------------
+
+Instead, consider using `pynng`_.
 
 Is what it says on the tin. Stay tuned for more. Dependencies:
 
@@ -40,3 +43,5 @@ Related Projects
 
 - `nanomsg <http://nanomsg.org/>`_
 - `aionn <https://github.com/wrobell/aionn>`_ - asyncio messaging library based on nnpy
+
+.. _pynng: https://github.com/codypiersall/pynng
