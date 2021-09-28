@@ -4,7 +4,7 @@ from . import errors
 import os
 
 from .errors import NNError
-from .socket import Socket
+from .socket import Socket, MessageControl
 
 class PollSet(object):
 
